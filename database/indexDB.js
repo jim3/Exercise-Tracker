@@ -15,12 +15,13 @@ const exerciseCollection = client.db(dbname).collection(collection_exercise);
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-// Create a user
 const createOneUser = async (user) => {
     try {
         await client.connect();
         let result = await userCollection.insertOne(user);
-        console.log(`New listing created with the following id: ${result.insertedId}`);
+        console.log(
+            `New listing created with the following id: ${result.insertedId}`
+        );
         return user;
     } catch (e) {
         console.error(e);
@@ -31,13 +32,12 @@ const createOneUser = async (user) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-// Get all users
 const getAllUsers = async () => {
     try {
         await client.connect();
-        // cursor commonly used for larger datasets via GET /requests
         const cursor = userCollection.find();
         const results = await cursor.toArray(); // convert the cursor to an array
+        const lenghtOfResults = results.length;
         if (results.length > 0) {
             console.log("Found the following records");
             console.log(results);
@@ -79,13 +79,17 @@ const getUserByName = async (name) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-// Get user object by id
 const getUserById = async (userId) => {
     try {
         await client.connect();
-        const result = await userCollection.findOne({ _id: new ObjectId(userId) });
+        const result = await userCollection.findOne({
+            _id: new ObjectId(userId),
+        });
+        console.log(`Adding/Retrieving exercise for user with ID ${userId}`);
         if (result) {
-            console.log(`Found a listing in the collection with the id of '${userId}':`);
+            console.log(
+                `Found a listing in the collection with the id of '${userId}':`
+            );
             console.log(result);
             return result;
         } else {
@@ -102,14 +106,17 @@ const getUserById = async (userId) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-// Create an exercise
-const createOneExercise = async (createExerciseObj) => {
+const createOneExercise = async (userId, newExercise) => {
     try {
         await client.connect();
-        let result = await exerciseCollection.insertMany(createExerciseObj);
+        newExercise.userId = new ObjectId(userId); // add userId to newExercise object
+        const result = await exerciseCollection.insertOne(newExercise);
+        console.log(
+            `New exercise created with the following id: ${result.insertedId}`
+        );
         return result;
     } catch (e) {
-        console.error(e);
+        console.error(`Failed to create exercise. ${e}`);
     } finally {
         await client.close();
     }
@@ -117,22 +124,24 @@ const createOneExercise = async (createExerciseObj) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-// Get an exercise by id
-const getExerciseById = async (userId) => {
+const getExercisesByUserId = async (userId) => {
     try {
         await client.connect();
-        const result = await exerciseCollection.findOne({ _id: userId });
-        if (result) {
-            console.log(`Found a listing in the collection with the id of '${userId}':`);
+        const result = await exerciseCollection
+            .find({ userId: new ObjectId(userId) })
+            .toArray();
+        console.log(
+            `Found ${result.length} exercises for user with ID ${userId}`
+        );
+
+        if (result.length > 0) {
             console.log(result);
-            return result;
         } else {
-            console.log(`No listings found with the id '${userId}'`);
-            return null;
+            console.log(`No exercises found for user with ID ${userId}`);
         }
+        return result;
     } catch (e) {
-        console.error(e);
-        return [];
+        console.error(`Failed to get exercises. ${e}`);
     } finally {
         await client.close();
     }
@@ -146,5 +155,5 @@ module.exports = {
     getAllUsers,
     getUserById,
     createOneExercise,
-    getExerciseById,
+    getExercisesByUserId,
 };
