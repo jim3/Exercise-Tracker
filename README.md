@@ -2,8 +2,10 @@
 
 ### What it does
 
-A full stack Node.js, Express and MongoDB app that allows users to create
-new users, add exercises to their log, and view their exercise log.
+A full stack Node.js, Express and MongoDB Exerciser Tracker app. It allows users to create
+a new user, add new exercises for those users, along with description and duration. The app
+also logs exercises for each user, giving them a personal "history" log. Users can also
+filter the logs by a date range, including a limit to the amount of log given.
 
 ### API Reference
 
