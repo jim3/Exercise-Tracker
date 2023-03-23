@@ -54,8 +54,3 @@ new users, add exercises to their log, and view their exercise log.
 3. Start the server `npm start`
 
 4. Visit `http://localhost:3000` in your browser
-
-Note: You will need to run MongoDB locally or have a MongoDB Atlas account and a MongoDB database.
-You will also need to create a `.env` file in the root directory of the project and add the following line:
-
-MONGO_DB_CONNECTION_STRING=`mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority`
