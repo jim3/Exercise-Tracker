@@ -60,11 +60,10 @@ router.get("/api/users/:userId/userbyid", async (req, res) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-// Create an exercise
 router.post("/api/users/:_id/exercises", async (req, res) => {
     const userId = req.params._id;
-    const result = await getUserById(userId); // find user by id
-    console.log(`Adding exercise for user with ID ${userId}`);
+    // const result = await getUserById(userId); // find user by id
+    // console.log(`Adding exercise for user with ID ${userId}`);
     const exercise = req.body;
 
     if (!exercise.description || !exercise.duration) {
@@ -73,7 +72,7 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
 
     // if date is empty, set it to today's date
     if (exercise.date === "" || exercise.date === undefined) {
-        exercise.date = new Date().toISOString();
+        exercise.date = new Date().toDateString();
     }
     // if date is not empty, convert it to a date object
     else {
@@ -90,7 +89,7 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
         }
 
         // set date to formatted string in UTC time zone
-        exercise.date = dateObj.toISOString();
+        exercise.date = dateObj.toDateString();
     }
 
     const newExercise = {
@@ -99,30 +98,23 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
         date: exercise.date,
     };
 
+    // update the user's exercise field in the database??
+    // const user = await createOneExercise(userId, exercise);
+
+    // line 159 ->
     await createOneExercise(userId, newExercise); // create exercise
-
-    const userExercises = await getExercisesByUserId(userId);
-
-    const userObj = {
-        username: result.username,
-        _id: userId,
-    };
-
-    const exercises = userExercises.map((exercise) => ({
-        description: exercise.description,
-        duration: exercise.duration,
-        date: exercise.date,
-    }));
-
-    const responseObj = {
-        username: userObj.username,
-        _id: userObj._id,
-        count: exercises.length,
-        log: exercises,
-    };
-
-    return res.json(responseObj);
-    // res.json(responseObj);
+    const userExercises = await getExercisesByUserId(userId); // get array of all exercises ()
+    console.log(userExercises);
+    res.json(userExercises);
+    
+    // possible solution?
+    //res.json({
+    //    _id: user._id,
+    //    username: user.username,
+    //    date: exercise.date,
+    //    duration: exercise.duration,
+    //    description: exercise.description,
+    //});
 });
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
