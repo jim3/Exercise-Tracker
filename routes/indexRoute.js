@@ -106,15 +106,6 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
     const userExercises = await getExercisesByUserId(userId); // get array of all exercises ()
     console.log(userExercises);
     res.json(userExercises);
-    
-    // possible solution?
-    //res.json({
-    //    _id: user._id,
-    //    username: user.username,
-    //    date: exercise.date,
-    //    duration: exercise.duration,
-    //    description: exercise.description,
-    //});
 });
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
