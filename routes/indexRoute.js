@@ -11,8 +11,10 @@ const { getExercisesByUserId } = require("../database/indexDB");
 
 // Create a new user
 router.post("/api/users", async (req, res) => {
+    console.log(req.body); // --> { username: 'lola'}
     const user = req.body;
     await createOneUser(user); // ->
+
     const userObj = {
         username: user.username,
         _id: user._id,
@@ -62,18 +64,27 @@ router.get("/api/users/:userId/userbyid", async (req, res) => {
 
 router.post("/api/users/:_id/exercises", async (req, res) => {
     const userId = req.params._id;
-    // const result = await getUserById(userId); // find user by id
-    // console.log(`Adding exercise for user with ID ${userId}`);
+    console.log(`Adding exercise for user with ID ${userId}`);
     const exercise = req.body;
+
+    // create exercise object, needed to assign it to user(?)
+    const user = await getUserById(userId); // getUserById ->
+
+    const userObj = {
+        _id: userId,
+        username: user.username,
+    }
+    console.log(userObj); // got user object
+
 
     if (!exercise.description || !exercise.duration) {
         return res.status(400).send("Description and duration are required");
     }
-
     // if date is empty, set it to today's date
     if (exercise.date === "" || exercise.date === undefined) {
         exercise.date = new Date().toDateString();
     }
+
     // if date is not empty, convert it to a date object
     else {
         let dateObj = new Date(exercise.date);
@@ -92,20 +103,28 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
         exercise.date = dateObj.toDateString();
     }
 
+    // create new exercise object from `req.body = exercise`
     const newExercise = {
         description: exercise.description,
         duration: exercise.duration,
         date: exercise.date,
     };
 
-    // update the user's exercise field in the database??
-    // const user = await createOneExercise(userId, exercise);
+    await createOneExercise(newExercise); // createOneExercise ->
 
-    // line 159 ->
-    await createOneExercise(userId, newExercise); // create exercise
-    const userExercises = await getExercisesByUserId(userId); // get array of all exercises ()
-    console.log(userExercises);
-    res.json(userExercises);
+    console.log("newExercise--> ", newExercise);
+
+    // create response object
+    const responseObj = {
+        userObj,
+        description: newExercise.description,
+        duration: parseInt(newExercise.duration),
+        date: newExercise.date,
+    };
+
+    console.log("responseObj--> ", responseObj);
+
+    res.json(responseObj);
 });
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
