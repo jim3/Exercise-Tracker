@@ -1,12 +1,13 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
-const uri = `${process.env.MONGO_DB_CONNECTION_STRING}`;
+const uri = process.env.MONGO_DB_CONNECTION_STRING;
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverApi: ServerApiVersion.v1,
 });
+
 const dbname = "test";
 const collection_user = "users";
 const collection_exercise = "exercises";
@@ -73,10 +74,9 @@ const getUserByName = async (name) => {
 const getUserById = async (userId) => {
     try {
         await client.connect();
-        const result = await userCollection.findOne({
-            _id: new ObjectId(userId),
-        });
+        const result = await userCollection.findOne({ _id: new ObjectId(userId), });
         console.log(`Found a listing for user with ID ${userId}`);
+
         if (result) {
             console.log(`Found a listing in the collection with the id of '${userId}':`);
             console.log(result);
@@ -93,26 +93,11 @@ const getUserById = async (userId) => {
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-const createOneExercise = async (userId, newExercise) => {
+const createOneExercise = async (newExercise) => {
     try {
-        const user = await userCollection.findOne({ _id: new ObjectId(userId) });
-        if (!user) {
-            throw new Error(`User with ID ${userId} not found`);
-        }
-
-        newExercise.userId = new ObjectId(userId); // add userId to newExercise object
-        const result = await exerciseCollection.insertOne(newExercise); // insert newExercise into collection
+        const result = await exerciseCollection.insertOne(newExercise); // insert into collection
         console.log(`New exercise created with the following id: ${result.insertedId}`);
-
-        // create response object
-        const response = {
-            _id: user._id,
-            username: user.username,
-            description: result.description,
-            date: new Date(result.date).toDateString(),
-        };
-        console.log(`Response object: ${response}`);
-        return response;
+        return result;
     } catch (e) {
         console.error(`Failed to create exercise. ${e}`);
         throw e;
