@@ -193,4 +193,4 @@ router.get("/api/users/:_id/logs", async (req, res) => {
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 module.exports = router;
-// http://localhost:3000/api/users/641e31110ef8a53de64ae126/logs?from=2023-03-04&to=2023-03-25
+
