@@ -6,8 +6,8 @@ A full stack Node.js, Express and MongoDB Exerciser Tracker app. It allows users
 a new user, add new exercises for those users, along with description and duration. The app
 also logs exercises for each user, giving them a personal "history" log. Users can also
 filter the logs by a date range, including a limit to the amount of log given.
-<sub>Note: The project outline is provided by the aweseome 
-   [www.freecodecamp.org](https://www.freecodecamp.org/learn/back-end-development-and-apis/back-end-development-and-apis-projects/exercise-tracker)</sub>
+<br>
+<sub>Note: The project outline is provided by the aweseome [www.freecodecamp.org](https://www.freecodecamp.org)</sub>
 
 ### API Reference
 
