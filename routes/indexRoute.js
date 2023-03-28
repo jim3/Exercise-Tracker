@@ -11,7 +11,7 @@ const { getExercisesByUserId } = require("../database/indexDB");
 
 // Create a new user
 router.post("/api/users", async (req, res) => {
-    console.log(req.body); // --> { username: 'lola'}
+    console.log(req.body);
     const user = req.body;
     await createOneUser(user); // ->
 
@@ -73,9 +73,8 @@ router.post("/api/users/:_id/exercises", async (req, res) => {
     const userObj = {
         _id: userId,
         username: user.username,
-    }
+    };
     console.log(userObj); // got user object
-
 
     if (!exercise.description || !exercise.duration) {
         return res.status(400).send("Description and duration are required");
@@ -194,3 +193,4 @@ router.get("/api/users/:_id/logs", async (req, res) => {
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 module.exports = router;
+// http://localhost:3000/api/users/641e31110ef8a53de64ae126/logs?from=2023-03-04&to=2023-03-25
