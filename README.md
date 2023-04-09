@@ -7,7 +7,11 @@ a new user, add new exercises for those users, along with description and durati
 also logs exercises for each user, giving them a personal "history" log. Users can also
 filter the logs by a date range, including a limit to the amount of log given.
 <br>
-<sub>[www.freecodecamp.org](https://www.freecodecamp.org)</sub>
+
+### What it was
+This was a project challenge w/ outline/boilerplate for the <sub>[www.freecodecamp.org](https://www.freecodecamp.org)</sub> Back-end Development and API's course.
+
+---
 
 ### API Reference
 
